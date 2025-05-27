@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.ecommerceapp.R
 import com.example.ecommerceapp.databinding.FragmentCartBinding
 import com.example.ecommerceapp.models.local.CartItem
 import com.example.ecommerceapp.models.repo.CartRepositoryImpl
@@ -30,6 +32,12 @@ class CartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val activity = requireActivity() as AppCompatActivity
+        activity.setSupportActionBar(binding.toolbar)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.title = "Your Cart"
 
         cartViewModel = ViewModelProvider(
             this,
@@ -55,7 +63,14 @@ class CartFragment : Fragment() {
         }
 
         binding.btnCheckout.setOnClickListener {
-            Toast.makeText(requireContext(), "Proceeding to checkout...", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, CheckoutFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         cartViewModel.getAllItems()

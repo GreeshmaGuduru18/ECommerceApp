@@ -36,9 +36,9 @@ class ProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val activity = requireActivity() as AppCompatActivity
+        activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setHasOptionsMenu(true)
-
+        activity.supportActionBar?.title = "Products"
 
 
         cartViewModel = ViewModelProvider(
@@ -86,6 +86,10 @@ class ProductFragment : Fragment() {
                 imageResId = selectedProduct.imageResId
             )
             cartViewModel.insertItem(cartItem)
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 

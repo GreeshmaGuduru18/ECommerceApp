@@ -5,18 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.ecommerceapp.models.LoginRequest
 import com.example.ecommerceapp.models.LoginResponse
-import com.example.ecommerceapp.models.repo.Repository
+import com.example.ecommerceapp.models.repo.RepositoryImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel(private val repository: Repository) : ViewModel() {
+class LoginViewModel(private val repository: RepositoryImpl) : ViewModel() {
 
-    private val _loginResult = MutableLiveData<LoginResponse?>()
-    val loginResult: LiveData<LoginResponse?> = _loginResult
+    private val _loginResponse = MutableLiveData<LoginResponse>()
+    val loginResponse: LiveData<LoginResponse> = _loginResponse
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     fun loginUser(request: LoginRequest) {
         repository.loginUser(request).enqueue(object : Callback<LoginResponse> {
@@ -24,15 +24,15 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 call: Call<LoginResponse>,
                 response: Response<LoginResponse>
             ) {
-                if (response.isSuccessful) {
-                    _loginResult.value = response.body()
+                if (response.isSuccessful && response.body()?.status == 0) {
+                    _loginResponse.postValue(response.body())
                 } else {
-                    _error.value = "Login failed: ${response.code()}"
+                    _errorMessage.postValue("Invalid username or password")
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                _error.value = "Login error: ${t.message}"
+                _errorMessage.postValue("Login failed: ${t.message}")
             }
         })
     }

@@ -62,10 +62,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.loginResult.observe(viewLifecycleOwner) {
+        viewModel.loginResponse.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(requireContext(), "Login Success: ${it.message}", Toast.LENGTH_SHORT).show()
-
 
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, DashboardFragment())
@@ -74,7 +73,7 @@ class LoginFragment : Fragment() {
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner) {
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }

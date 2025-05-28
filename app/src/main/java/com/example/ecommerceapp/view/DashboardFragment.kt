@@ -1,6 +1,7 @@
 package com.example.ecommerceapp.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -103,7 +104,12 @@ class DashboardFragment : Fragment() {
             }
 
                 R.id.nav_logout -> {
-                    Toast.makeText(requireContext(), "Logging out", Toast.LENGTH_SHORT).show()
+                    val sharedPref = requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    sharedPref.edit().clear().apply()
+
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, LoginFragment())
+                        .commit()
                 }
             }
 

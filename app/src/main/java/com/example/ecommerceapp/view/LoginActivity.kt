@@ -1,5 +1,6 @@
 package com.example.ecommerceapp.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -16,12 +17,15 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        val sharedPref = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
 
-        if (savedInstanceState == null) {
+        val fragment = if (isLoggedIn) DashboardFragment() else LoginFragment()
+
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, LoginFragment())
                 .commit()
-        }
+
 
     }
 

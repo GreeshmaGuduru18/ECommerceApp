@@ -46,23 +46,8 @@ class LoginFragment : Fragment() {
             val password = binding.etPassword.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-
-
-                val sharedPref = requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-                val savedEmail = sharedPref.getString("email", null)
-                val savedPassword = sharedPref.getString("password", null)
-
-                if (email == savedEmail && password == savedPassword) {
-                    Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
-
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, DashboardFragment())
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    Toast.makeText(requireContext(), "Invalid username or password", Toast.LENGTH_SHORT).show()
-                }
-
+                val request = LoginRequest(email, password)
+                viewModel.loginUser(request)
             } else {
                 Toast.makeText(requireContext(), "Please enter email and password", Toast.LENGTH_SHORT).show()
             }
@@ -82,6 +67,16 @@ class LoginFragment : Fragment() {
         viewModel.loginResponse.observe(viewLifecycleOwner) {
             it?.let {
                 Toast.makeText(requireContext(), "Login Success: ${it.message}", Toast.LENGTH_SHORT).show()
+
+                val sharedPref = requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putString("name", it.user.fullName)
+                    putString("email", it.user.emailId)
+                    putString("phone", it.user.mobileNo)
+                    putString("userId", it.user.userId)
+                    putBoolean("isLoggedIn", true)
+                    apply()
+                }
 
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, DashboardFragment())

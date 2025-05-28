@@ -70,6 +70,7 @@ class RegisterFragment : Fragment() {
                     putString("name", binding.etName.text.toString())
                     putString("email", binding.etEmail.text.toString())
                     putString("phone", binding.etMobileNum.text.toString())
+                    putString("password", binding.etPassword.text.toString())
                     apply()
                 }
 

@@ -55,6 +55,13 @@ class CheckoutFragment : Fragment() {
         }
 
         cartViewModel.getAllItems()
+
+        binding.btnNext.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, AddressFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun updateTotalBill(cartItems: List<CartItem>) {

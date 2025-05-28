@@ -95,10 +95,15 @@ class DashboardFragment : Fragment() {
                         .addToBackStack(null)
                         .commit()
                 }
+                R.id.nav_orders -> {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, OrderFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
 
                 R.id.nav_logout -> {
                     Toast.makeText(requireContext(), "Logging out", Toast.LENGTH_SHORT).show()
-                    // You can also clear SharedPreferences here and navigate to Login
                 }
             }
 

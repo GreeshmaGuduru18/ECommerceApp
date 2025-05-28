@@ -16,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, LoginFragment())

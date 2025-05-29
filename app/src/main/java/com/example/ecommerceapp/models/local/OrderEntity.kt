@@ -13,5 +13,6 @@ data class OrderEntity(
     val quantity: Int,
     val address: String,
     val state: String,
+    val paymentMethod: String,
     val orderBatchId: Long
 )

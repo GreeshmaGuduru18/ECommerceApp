@@ -64,7 +64,7 @@ class CartFragment : Fragment() {
 
         binding.btnCheckout.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, CheckoutFragment())
+                .replace(R.id.fragmentContainerView, CheckoutParentFragment())
                 .addToBackStack(null)
                 .commit()
         }

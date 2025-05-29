@@ -30,24 +30,16 @@ class CheckoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup RecyclerView
+        binding.recyclerCheckout.layoutManager = LinearLayoutManager(requireContext())
+        checkoutAdapter = CheckoutAdapter(emptyList())
+        binding.recyclerCheckout.adapter = checkoutAdapter
 
-        val activity = requireActivity() as AppCompatActivity
-        activity.setSupportActionBar(binding.toolbar)
-        activity.supportActionBar?.title = "CHECKOUT"
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
+        // Setup ViewModel
         cartViewModel = ViewModelProvider(
             requireActivity(),
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
         )[CartViewModel::class.java]
-
-        binding.recyclerCheckout.layoutManager = LinearLayoutManager(requireContext())
-        checkoutAdapter = CheckoutAdapter(emptyList())
-        binding.recyclerCheckout.adapter = checkoutAdapter
 
         cartViewModel.cartItems.observe(viewLifecycleOwner) { items ->
             checkoutAdapter.updateList(items)
@@ -56,11 +48,12 @@ class CheckoutFragment : Fragment() {
 
         cartViewModel.getAllItems()
 
+        // Navigate to AddressFragment (Delivery step)
         binding.btnNext.setOnClickListener {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, AddressFragment())
-                .addToBackStack(null)
-                .commit()
+            parentFragment?.childFragmentManager?.beginTransaction()
+                ?.replace(R.id.frameContainer, AddressFragment())
+                ?.addToBackStack(null)
+                ?.commit()
         }
     }
 

@@ -61,29 +61,34 @@ class ProductFragment : Fragment() {
         // Load dummy products based on category
         when (category) {
             "Smart Phones" -> {
-                productList.add(Product("RealMe Nazro 50", "Helio G96 Processor, 4GB RAM+64GB", 200.0, R.drawable.phone1, 4.5))
-                productList.add(Product("Redmi Note 11T", "Dimensity 810 5G, 6GB RAM, 128GB ROM", 220.0, R.drawable.phone2, 4.6))
-                productList.add(Product("Xiaomi 11 Lite NE 5G", "Slimmest & Lightest 5G", 300.0, R.drawable.phonw3, 4.4))
-                productList.add(Product("Redmi 9A", "Helio G25 Processor, 5000mAh Battery", 249.0, R.drawable.phone4, 4.2))
-                productList.add(Product("Redmi A3x", "6.71\" Display, 64GB Storage", 179.0, R.drawable.phone5, 4.3))
-                productList.add(Product("OnePlus Nord CE 3 Lite", "Snapdragon, 67W SUPERVOOC", 325.0, R.drawable.phone6, 4.7))
+                productList.add(Product("1", "RealMe Nazro 50", "Helio G96 Processor, 4GB RAM+64GB", "200.0", "R.drawable.phone1", "4.5"))
+                productList.add(Product("2", "Redmi Note 11T", "Dimensity 810 5G, 6GB RAM, 128GB ROM", "220.0", "R.drawable.phone2", "4.6"))
+                productList.add(Product("3", "Xiaomi 11 Lite NE 5G", "Slimmest & Lightest 5G", "300.0", "R.drawable.phonw3", "4.4")) //
+                productList.add(Product("4", "Redmi 9A", "Helio G25 Processor, 5000mAh Battery", "249.0", "R.drawable.phone4", "4.2"))
+                productList.add(Product("5", "Redmi A3x", "6.71\" Display, 64GB Storage", "179.0", "R.drawable.phone5", "4.3"))
+                productList.add(Product("6", "OnePlus Nord CE 3 Lite", "Snapdragon, 67W SUPERVOOC", "325.0", "R.drawable.phone6", "4.7"))
             }
 
-
             else -> {
-                productList.add(Product("No Products Available", "Please select a valid category.", 0.0, R.drawable.ic_launcher_background, 0.0))
+                productList.add(Product("0", "No Products Available", "Please select a valid category.", "0.0", "R.drawable.ic_launcher_background", "0.0"))
             }
         }
 
         // RecyclerView setup
         binding.recyclerProducts.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerProducts.adapter = ProductAdapter(productList) { selectedProduct ->
+            val imageResId = requireContext().resources.getIdentifier(
+                selectedProduct.imageResId.replace("R.drawable.", ""),
+                "drawable",
+                requireContext().packageName
+            )
+
             val cartItem = CartItem(
                 id = 0,
                 name = selectedProduct.name,
-                price = selectedProduct.price,
+                price = selectedProduct.price.toDouble(),
                 quantity = 1,
-                imageResId = selectedProduct.imageResId
+                imageResId = imageResId
             )
             cartViewModel.insertItem(cartItem)
         }

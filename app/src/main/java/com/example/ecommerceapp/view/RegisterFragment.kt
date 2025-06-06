@@ -43,7 +43,7 @@ class RegisterFragment : Fragment() {
             val password = binding.etPassword.text.toString()
 
             if (name.isNotEmpty() && email.isNotEmpty() && phone.isNotEmpty() && password.isNotEmpty()) {
-                val request = RegisterRequest(name, email, phone, password)
+                val request = RegisterRequest(name, phone, email, password)
                 viewModel.registerUser(request)
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()

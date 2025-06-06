@@ -3,6 +3,7 @@ package com.example.ecommerceapp.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ecommerceapp.databinding.ItemProductBinding
 import com.example.ecommerceapp.models.Product
 
@@ -29,7 +30,13 @@ class ProductAdapter(
         holder.binding.tvName.text = product.name
         holder.binding.tvDesc.text = product.description
         holder.binding.tvPrice.text = "$ ${product.price}"
-        holder.binding.ivProduct.setImageResource(product.imageResId)
+        val context = holder.itemView.context
+        val imageId = context.resources.getIdentifier(
+            product.imageResId.replace("R.drawable.", ""),
+            "drawable",
+            context.packageName
+        )
+        holder.binding.ivProduct.setImageResource(imageId)
         holder.binding.tvRating.text = "${product.rating} ★"
 
         holder.binding.tvAddToCart.setOnClickListener {
@@ -39,3 +46,4 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = list.size
 }
+

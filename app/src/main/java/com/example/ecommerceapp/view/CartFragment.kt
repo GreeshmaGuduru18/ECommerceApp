@@ -39,12 +39,15 @@ class CartFragment : Fragment() {
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.title = "Your Cart"
 
+
         cartViewModel = ViewModelProvider(
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
         )[CartViewModel::class.java]
 
+
         binding.recyclerCart.layoutManager = LinearLayoutManager(requireContext())
+
 
         cartViewModel.cartItems.observe(viewLifecycleOwner) { items ->
             cartList = items.toMutableList()
@@ -58,6 +61,7 @@ class CartFragment : Fragment() {
             updateTotalBill()
         }
 
+
         cartViewModel.message.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
@@ -69,9 +73,11 @@ class CartFragment : Fragment() {
                 .commit()
         }
 
+
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
 
         cartViewModel.getAllItems()
     }

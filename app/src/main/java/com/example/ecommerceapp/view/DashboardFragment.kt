@@ -1,7 +1,7 @@
 package com.example.ecommerceapp.view
 
+import ApiClient
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -18,6 +18,7 @@ import com.example.ecommerceapp.models.CategoryResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class DashboardFragment : Fragment() {
 
@@ -48,10 +49,10 @@ class DashboardFragment : Fragment() {
 
         binding.recyclerCategories.layoutManager = GridLayoutManager(requireContext(), 2)
 
-        categoryAdapter = CategoryAdapter(categoryList) { categoryName ->
+        categoryAdapter = CategoryAdapter(categoryList) { category ->
             val fragment = ProductFragment()
             val bundle = Bundle().apply {
-                putString("category", categoryName)
+                putString("subCategoryId", category.categoryId)
             }
             fragment.arguments = bundle
             parentFragmentManager.beginTransaction()
@@ -134,35 +135,38 @@ class DashboardFragment : Fragment() {
     }
 
     private fun getCategories() {
-        ApiClient.getApiService().getCategories().enqueue(object : Callback<CategoryResponse> {
+        val call = ApiClient.getApiService().getCategories()
+
+        call.enqueue(object : Callback<CategoryResponse> {
             override fun onResponse(
                 call: Call<CategoryResponse>,
                 response: Response<CategoryResponse>
             ) {
-                if (response.isSuccessful && response.body()?.status == 0) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    android.util.Log.d("CATEGORY_DEBUG", "Response Body: $body")
 
+                    if (body?.status == 0) {
+                        val categories = body.categories
+                        android.util.Log.d("CATEGORY_DEBUG", "Categories: $categories")
 
-                    val categories = listOf(
-                        Category("1", "Smart Phones", "smartphones.png", "1"),
-                        Category("2", "Laptops", "laptops.png", "1"),
-                        Category("3", "Mens Wear", "menswear.png", "1"),
-                        Category("4", "Women's Wear", "womenwear.png", "1"),
-                        Category("5", "Grocery", "grocery.png", "1"),
-                        Category("6", "Kids wear", "kidswear.png", "1")
-                    )
-
-
-                    categoryList.clear()
-                    categoryList.addAll(categories)
-                    categoryAdapter.notifyDataSetChanged()
+                        categoryList.clear()
+                        categoryList.addAll(categories)
+                        categoryAdapter.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(requireContext(), "Status not 0: ${body?.status}", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to load categories", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "HTTP Error ${response.code()}", Toast.LENGTH_SHORT).show()
+                    android.util.Log.e("CATEGORY_DEBUG", "Error Body: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Network Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                android.util.Log.e("CATEGORY_DEBUG", "Failure: ${t.message}", t)
             }
         })
     }
+
 }

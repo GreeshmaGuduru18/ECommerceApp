@@ -19,7 +19,7 @@ abstract class CartDatabase : RoomDatabase() {
                     context.applicationContext,
                     CartDatabase::class.java,
                     "cart_db"
-                ).allowMainThreadQueries() // Optional: remove if using thread/coroutines
+                ).allowMainThreadQueries()
                     .build()
                 INSTANCE = instance
                 instance

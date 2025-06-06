@@ -3,13 +3,14 @@ package com.example.ecommerceapp.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import android.util.Log
 import com.example.ecommerceapp.R
 import com.example.ecommerceapp.databinding.ItemCategoryBinding
 import com.example.ecommerceapp.models.Category
 
 class CategoryAdapter(
     private val list: List<Category>,
-    private val onItemClick: (String) -> Unit
+    private val onItemClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     inner class CategoryViewHolder(val binding: ItemCategoryBinding) :
@@ -22,21 +23,25 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = list[position]
+        Log.d("CATEGORY_IMAGE_MATCH", "categoryImageUrl = ${category.categoryImageUrl}")
+
         holder.binding.tvCategory.text = category.categoryName
 
-        when (category.categoryName.lowercase()) {
-            "smart phones" -> holder.binding.ivCategory.setImageResource(R.drawable.smartphones)
-            "laptops" -> holder.binding.ivCategory.setImageResource(R.drawable.laptops)
-            "mens wear" -> holder.binding.ivCategory.setImageResource(R.drawable.menswear)
-            "women's wear" -> holder.binding.ivCategory.setImageResource(R.drawable.womenwear)
-            "grocery" -> holder.binding.ivCategory.setImageResource(R.drawable.grocery)
-            "kids wear" -> holder.binding.ivCategory.setImageResource(R.drawable.kidswear)
-            else -> holder.binding.ivCategory.setImageResource(R.drawable.ic_android_black_24dp)
+        val imageResId = when (category.categoryImageUrl.lowercase()) {
+            "smartphones.png" -> R.drawable.smartphones
+            "laptops.png" -> R.drawable.laptops
+            "mensfashion.png" -> R.drawable.mensfashion
+            "womensfashion.png" -> R.drawable.womensfashion
+            "grocery.png" -> R.drawable.grocery
+            "kidsfashion.png" -> R.drawable.kidsfashion
+            else -> R.drawable.ic_android_black_24dp
         }
 
-        // ✅ Pass the actual clicked category name
+
+        holder.binding.ivCategory.setImageResource(imageResId)
+
         holder.binding.root.setOnClickListener {
-            onItemClick(category.categoryName)
+            onItemClick(category)
         }
     }
 
